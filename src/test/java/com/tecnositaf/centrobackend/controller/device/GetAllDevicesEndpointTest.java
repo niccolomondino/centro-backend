@@ -41,8 +41,8 @@ public class GetAllDevicesEndpointTest {
 
 	/********** RESPONSE json **********/
 	private final String getAllUsersOnInitResponseJSON = "{" + "\"code\":0," + "\"message\":\"SUCCESS\","
-			+ "\"users\":["
-			+ "{\"idUser\":12,\"firstname\":\"Loris\",\"lastname\":\"Cernich\",\"birthday\":\"1991-08-13\",\"age\":28}"
+			+ "\"devices\":["
+			+ "{\"id\":null,\"type\":\"Telecamera\",\"description\":\"This is a telecamera.\",\"brand\":\"Sony\",\"isActive\":\"true\",\"inMaintenance\":\"true\",\"lastUpdate\":\"1959-09-10 12:12:12\",\"registrationTime\":\"1959-09-10 12:12:12\",\"weight\":12.5,\"storageYears\":10}"
 			+ "],\"size\":1" + "}";
 
 	@Test
@@ -53,17 +53,27 @@ public class GetAllDevicesEndpointTest {
 				.andExpect(jsonPath("$.code").exists()).andExpect(jsonPath("$.code").value(0))
 				.andExpect(jsonPath("$.message").exists()).andExpect(jsonPath("$.message").value("SUCCESS"))
 				.andExpect(jsonPath("$.size").exists()).andExpect(jsonPath("$.size").value(1))
-				.andExpect(jsonPath("$.users").exists()).andExpect(jsonPath("$.users").isArray())
-				.andExpect(jsonPath("$.users", hasSize(1)))
+				.andExpect(jsonPath("$.devices").exists()).andExpect(jsonPath("$.users").isArray())
+				.andExpect(jsonPath("$.devices", hasSize(1)))
 				// 'users'
 				.andExpect(jsonPath("$.users[0].idUser").exists()).andExpect(jsonPath("$.users[0].idUser").value(12))
-				.andExpect(jsonPath("$.users[0].firstname").exists())
-				.andExpect(jsonPath("$.users[0].firstname").value("Loris"))
-				.andExpect(jsonPath("$.users[0].lastname").exists())
-				.andExpect(jsonPath("$.users[0].lastname").value("Cernich"))
-				.andExpect(jsonPath("$.users[0].birthday").exists())
-				.andExpect(jsonPath("$.users[0].birthday").value("1991-08-13"))
-				.andExpect(jsonPath("$.users[0].age").exists()).andExpect(jsonPath("$.users[0].age").value(28))
+				.andExpect(jsonPath("$.users[0].type").exists())
+				.andExpect(jsonPath("$.users[0].type").value("Telecamera"))
+				.andExpect(jsonPath("$.users[0].description").value("This is a telecamera."))
+				.andExpect(jsonPath("$.users[0].brand").exists())
+				.andExpect(jsonPath("$.users[0].brand").value("Sony"))
+				.andExpect(jsonPath("$.users[0].isActive").exists())
+				.andExpect(jsonPath("$.users[0].isActive").value("true"))
+				.andExpect(jsonPath("$.users[0].inMaintenance").exists())
+				.andExpect(jsonPath("$.users[0].inMaintenance").value("true"))
+				.andExpect(jsonPath("$.users[0].lastUpdate").exists())
+				.andExpect(jsonPath("$.users[0].lastUpdate").value("1959-09-10 12:12:12"))
+				.andExpect(jsonPath("$.users[0].registrationTime").exists())
+				.andExpect(jsonPath("$.users[0].registrationTime").value("1959-09-10 12:12:12"))
+				.andExpect(jsonPath("$.users[0].weight").exists())
+				.andExpect(jsonPath("$.users[0].weight").value(12.5))
+				.andExpect(jsonPath("$.users[0].storageYears").exists())
+				.andExpect(jsonPath("$.users[0].storageYears").value(10))
 
 				.andDo(print());
 	}

@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tecnositaf.centrobackend.CentroBackendApplication;
 import com.tecnositaf.centrobackend.enumeration.Errors;
 
@@ -21,6 +22,8 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import java.time.LocalDateTime;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = CentroBackendApplication.class)
@@ -38,24 +41,25 @@ public class InsertNewDeviceEndpointTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wepAppContext).build();
     }
 
-    private final String ENDPOINT_RESOURCE_BASE_URL = "/users";
+    private final String ENDPOINT_RESOURCE_BASE_URL = "/devices";
+   
 
     /**********     REQUEST json    **********/
-    private final String marioRossiInsertRequestBodyJSON = "{\"idUser\":null,\"firstname\":\"Mario\",\"lastname\":\"Rossi\",\"birthday\":\"1959-09-10\",\"age\":null}";
-    private final String lucaVerdiInsertFailureForEmptyFieldRequestBodyJSON = "{\"idUser\":null,\"firstname\":null,\"lastname\":\"Verdi\",\"birthday\":\"2012-12-12\",\"age\":null}";
+    private final String deviceExampleOneInsertRequestBodyJSON = "{\"id\":null,\"type\":\"Telecamera\",\"description\":\"This is a telecamera test.\",\"brand\":\"Sony\",\"isActive\":\"true\",\"inMaintenance\":\"true\",\"lastUpdate\":\"1959-09-10 12:12:12\",\"registrationTime\":\"1959-09-10 12:12:12\",\"weight\":12.5,\"storageYears\":null}";
+    private final String deviceExampleTwoInsertFailureForEmptyFieldRequestBodyJSON = "{\"id\":null,\"type\":null,\"description\":\"Rossi\",\"brand\":\"Sony\",\"isActive\":\"true\",\"inMaintenance\":\"true\",\"lastUpdate\":\"1959-09-10 12:12:12\",\"registrationTime\":\"1959-09-10 12:12:12\",\"weight\":12.5,\"storageYears\":null}";
 
     /**********     RESPONSE json    **********/
-    private final String insertNewUserMarioRossiOnInitResponseJSON = "{" +
+    private final String insertNewDeviceExampleOneOnInitResponseJSON = "{" +
             "\"code\":0," +
             "\"message\":\"SUCCESS\"," +
-            "\"userInserted\": {\"idUser\":13,\"firstname\":\"Mario\",\"lastname\":\"Rossi\",\"birthday\":\"1959-09-10\",\"age\":60}" + ", " +
+            "\"userInserted\": {\"id\":null,\"type\":\"Mario\",\"description\":\"Rossi\",\"brand\":\"Sony\",\"isActive\":\"true\",\"inMaintenance\":\"true\",\"lastUpdate\":\"1959-09-10 12:12:12\",\"registrationTime\":\"1959-09-10 12:12:12\",\"weight\":12.5,\"storageYears\":null}," +
             "\"users\":[" +
-                "{\"idUser\":12,\"firstname\":\"Loris\",\"lastname\":\"Cernich\",\"birthday\":\"1991-08-13\",\"age\":28}" + ", " +
-                "{\"idUser\":13,\"firstname\":\"Mario\",\"lastname\":\"Rossi\",\"birthday\":\"1959-09-10\",\"age\":60}" +
+                "{\"id\":12,\"type\":\"Mario\",\"description\":\"Rossi\",\"brand\":\"Sony\",\"isActive\":\"true\",\"inMaintenance\":\"true\",\"lastUpdate\":\"1959-09-10 12:12:12\",\"registrationTime\":\"1959-09-10 12:12:12\",\"weight\":12.5,\"storageYears\":null}" + ", " +
+                "{\"id\":13,\"type\":\"Mario\",\"description\":\"Rossi\",\"brand\":\"Sony\",\"isActive\":\"true\",\"inMaintenance\":\"true\",\"lastUpdate\":\"1959-09-10 12:12:12\",\"registrationTime\":\"1959-09-10 12:12:12\",\"weight\":12.5,\"storageYears\":null}" +
             "]," +
             "\"size\":2" +
         "}";
-    private final String insertNewUserMarioRossiOnInitInvalidFieldResponseJSON = "{\"code\":"+ Errors.INVALID_FIELD.code +", \"message\":\""+ Errors.INVALID_FIELD.description +"\"}";
+    private final String insertNewDeviceExampleOneOnInitInvalidFieldResponseJSON = "{\"code\":"+ Errors.INVALID_FIELD.code +", \"message\":\""+ Errors.INVALID_FIELD.description +"\"}";
 
 
 
@@ -63,11 +67,11 @@ public class InsertNewDeviceEndpointTest {
     public void successOnInit() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_RESOURCE_BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content( marioRossiInsertRequestBodyJSON )
+                .content( deviceExampleOneInsertRequestBodyJSON )
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 //response
-                .andExpect(content().json( insertNewUserMarioRossiOnInitResponseJSON ))
+                .andExpect(content().json( insertNewDeviceExampleOneOnInitResponseJSON ))
                 .andDo(print());
     }
 
@@ -75,11 +79,11 @@ public class InsertNewDeviceEndpointTest {
     public void failureForEmptyField() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post(ENDPOINT_RESOURCE_BASE_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content( lucaVerdiInsertFailureForEmptyFieldRequestBodyJSON )
+                .content( deviceExampleTwoInsertFailureForEmptyFieldRequestBodyJSON )
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 //response
-                .andExpect(content().json( insertNewUserMarioRossiOnInitInvalidFieldResponseJSON ))
+                .andExpect(content().json( insertNewDeviceExampleOneOnInitInvalidFieldResponseJSON ))
                 .andDo(print());
     }
 }

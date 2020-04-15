@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.tecnositaf.centrobackend.dto.DTODevice;
+import com.tecnositaf.centrobackend.model.Device;
 import com.tecnositaf.centrobackend.CentroBackendApplication;
 
 import java.time.LocalDateTime;
@@ -31,7 +32,8 @@ public class DeviceUtilityTest {
 
     @Test
     public void testFalseIdDeviceNotNull() {
-        DTODevice dtoDevice = new DTODevice("34rafsa", "This is a telecamera", "Sony", LocalDateTime.of(1991, Month.AUGUST, 13, 12, 10, 10), LocalDateTime.of(1991, Month.AUGUST, 13, 12, 10, 10), true, false, 30.5, 13 );
+        DTODevice dtoDevice = new DTODevice("Telecamera", "This is a telecamera", "Sony", LocalDateTime.of(1991, Month.AUGUST, 13, 12, 10, 10), LocalDateTime.of(1991, Month.AUGUST, 13, 12, 10, 10), true, false, 30.5, 13 );
+        dtoDevice.setId("0000aaaa");
         assertFalse( DeviceUtility.isValidForInsert(dtoDevice) );
     }
     @Test
@@ -54,4 +56,28 @@ public class DeviceUtilityTest {
         DTODevice dtoDevice = new DTODevice("Telecamera", "This is a telecamera", "", LocalDateTime.of(1991, Month.AUGUST, 13, 12, 10, 10), LocalDateTime.of(1991, Month.AUGUST, 13, 12, 10, 10), true, false, 30.5, 13 );
         assertFalse( DeviceUtility.isValidForInsert(dtoDevice) );
     }
+    
+    
+    @Test
+    public void testCheckAndSetTimestampsDeviceNoNull() {
+        Device device = new Device("Telecamera", "This is a telecamera", "", LocalDateTime.of(1991, Month.AUGUST, 13, 12, 10, 10), LocalDateTime.of(1991, Month.AUGUST, 13, 12, 10, 10), true, false, 30.5);
+        DeviceUtility.checkAndSetTimestampsDevice(device);
+        assertNotNull(device.getLastUpdate());
+        assertNotNull(device.getRegistrationTime());
+    }
+    @Test
+    public void testCheckAndSetTimestampsDeviceLastUpdateNull() {
+        Device device = new Device("Telecamera", "This is a telecamera", "", null, LocalDateTime.of(1991, Month.AUGUST, 13, 12, 10, 10), true, false, 30.5);
+        DeviceUtility.checkAndSetTimestampsDevice(device);
+        assertNotNull(device.getLastUpdate());
+        assertNotNull(device.getRegistrationTime());
+    }
+    @Test
+    public void testCheckAndSetTimestampsDeviceRegistrationTimeNull() {
+        Device device = new Device("Telecamera", "This is a telecamera", "", LocalDateTime.of(1991, Month.AUGUST, 13, 12, 10, 10), null, true, false, 30.5);
+        DeviceUtility.checkAndSetTimestampsDevice(device);
+        assertNotNull(device.getLastUpdate());
+        assertNotNull(device.getRegistrationTime());
+    }
+    
 }

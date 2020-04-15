@@ -1,120 +1,94 @@
-package com.tecnositaf.centrobackend.model;
+package com.tecnositaf.centrobackend.dto;
 
 import java.time.LocalDate;
 
 import org.springframework.beans.BeanUtils;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.tecnositaf.centrobackend.dto.DTOUser;
-import com.tecnositaf.centrobackend.utilities.DateUtility;
+import com.tecnositaf.centrobackend.model.User;
 
-public class User {
+public class DTOUser {
 
 	private Integer idUser;
-	
-
 	private String firstname;
 	private String lastname;
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	LocalDate birthDate;
+	private LocalDate birthDate;
 	private String username;
-		
-	private String password;
+	private Integer age;	//campo in più (richiesto dal front-end) rispetto al model User, calcolabile dal campo 'birthday'
 
-	
-	public User() {
+
+	public DTOUser() {
 	}
 
+	public DTOUser(Integer idUser, String firstname, String lastname, LocalDate birthday, String username, Integer age) {
+		this.idUser = idUser;
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.birthDate = birthday;
+		this.username = username;
+		this.age = age;
+	}
 
 	public Integer getIdUser() {
 		return idUser;
 	}
-
-
 	public void setIdUser(Integer idUser) {
 		this.idUser = idUser;
 	}
-	
 	public String getFirstname() {
 		return firstname;
 	}
-
-
 	public void setFirstname(String firstname) {
 		this.firstname = firstname;
 	}
-
-
 	public String getLastname() {
 		return lastname;
 	}
-
-
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
-
+	public LocalDate getBirthday() {
+		return birthDate;
+	}
+	public void setBirthday(LocalDate birthday) {
+		this.birthDate = birthday;
+	}
+	public Integer getAge() {
+		return age;
+	}
+	public void setAge(Integer age) {
+		this.age = age;
+	}
 
 	public String getUsername() {
 		return username;
 	}
 
-
 	public void setUsername(String username) {
 		this.username = username;
 	}
 
-
-
-	public LocalDate getBirthDate() {
-		return birthDate;
-	}
-
-
-	public void setBirthDate(LocalDate birthDate) {
-		this.birthDate = birthDate;
-	}
-
-	
-	
-	public String getPassword() {
-		return password;
-	}
-
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
 	@Override
 	public String toString() {
-		return "User{" +
+		return "DTOUser{" +
 				"idUser=" + idUser +
 				", firstname='" + firstname + '\'' +
 				", lastname='" + lastname + '\'' +
 				", birthday=" + birthDate +
 				", username='" + username + '\'' +
-				", password='" + password + '\'' +
+				", age=" + age +
 				'}';
 	}
 
+
 	/*************************************************************************************************/
 	/*************************************************************************************************/
 	/*************************************************************************************************/
 
 	
-	//nuovo metodo che ho aggiunto al model per il passaggo al DTO corrispondente
-	public DTOUser toDTOUser() {
-		DTOUser output = new DTOUser();	// 'this' => User	 'output'	=> DTOUser
+	//metodo per il passaggio da DTO a model
+	public User toUser() {
+		User output = new User(); // 'this' => DTOUser	 'output'	=> User
 		BeanUtils.copyProperties(this, output);	//vengono settate in 'output' tutti campi che hanno lo stesso nome tra la classe User e DTOUser
-
-		/*** 'age' of DTO class is a value calculated from 'birthday' ***/
-		Integer age = DateUtility.calculateAgeOf( this.getBirthDate() );
-		output.setAge(age);
-
 		return output;
 	}
-
-
-	
 }

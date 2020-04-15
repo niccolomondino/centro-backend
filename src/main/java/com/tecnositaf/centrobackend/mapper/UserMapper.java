@@ -10,6 +10,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.tecnositaf.centrobackend.model.User;
 
@@ -28,7 +29,7 @@ public interface UserMapper {
     List<User> findAll();
     
     @Insert("INSERT INTO Users(birthDate, name, password) " +
-            " VALUES (#{birthDate}, #{name}, #{password})")
+            " VALUES (#{birthDate}, #{username}, #{password})")
     @Options(useGeneratedKeys=true,keyProperty="idUser",keyColumn="idUser")
     int insert(User user);
     
@@ -40,5 +41,10 @@ public interface UserMapper {
 
     @Delete("DELETE FROM Users WHERE idUser=#{idUser}")
 	int deleteById(Integer idUser);
+    
+    //mancano alcuni campi
+    @Update("UPDATE Users SET birthDate = #{birthDate} , name= #{username} WHERE idUser = #{idUser}")
+	User update(User user);
+
     
 }

@@ -1,24 +1,26 @@
 package com.tecnositaf.centrobackend.exception;
 
+import com.tecnositaf.centrobackend.enumeration.Errors;
+
 public class ResourceNotFoundException extends RuntimeException{
 
 	private static final long serialVersionUID = 1L;
 	
-    private  int errCode;
+    private  Errors errCode;
     private  String errMsg;
  
     public ResourceNotFoundException() { }
  
-    public ResourceNotFoundException(int errCode, String errMsg) {
+    public ResourceNotFoundException(Errors errCode, String errMsg) {
         this.errCode = errCode;
         this.errMsg = errMsg;
     }
  
-    public int getErrCode() {
+    public Errors getErrCode() {
         return errCode;
     }
  
-    public void setErrCode(int errCode) {
+    public void setErrCode(Errors errCode) {
         this.errCode = errCode;
     }
  

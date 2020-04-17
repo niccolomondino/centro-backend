@@ -1,6 +1,7 @@
 package com.tecnositaf.centrobackend.response;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,19 +21,19 @@ public class InsertNewUserResponse extends Response{
 		this.size = 0;
 	}
 
-	public InsertNewUserResponse(int code, String message, User userInserted, ArrayList<User> users, int size) {
+	public InsertNewUserResponse(int code, String message, User userInserted, List<User> users, int size) {
 		super(code, message, ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
 		this.userInserted = userInserted.toDTOUser();
-		this.users = new ArrayList<DTOUser>();	//XXX il passaggio da model a DTO deve essere fatto qui, durante l'imbustamento, lasciando all'oscuro il Controller della logica di trasformazione
+		this.users = new ArrayList<>();	
 		users.forEach(user -> 
 			this.users.add( user.toDTOUser() )
 		);
 		this.size = size;
 	}
-	public InsertNewUserResponse(int code, String message, User userInserted, ArrayList<User> users) {
+	public InsertNewUserResponse(int code, String message, User userInserted, List<User> users) {
 		super(code, message, ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
 		this.userInserted = userInserted.toDTOUser();
-		this.users = new ArrayList<DTOUser>();	//XXX il passaggio da model a DTO deve essere fatto qui, durante l'imbustamento, lasciando all'oscuro il Controller della logica di trasformazione
+		this.users = new ArrayList<>();
 		users.forEach(user -> 
 			this.users.add( user.toDTOUser() )
 		);
@@ -49,12 +50,12 @@ public class InsertNewUserResponse extends Response{
 		this.userInserted = userInserted;
 	}
 
-	public ArrayList<DTOUser> getUsers() {
+	public List<DTOUser> getUsers() {
 		return users;
 	}
 
-	public void setUsers(ArrayList<DTOUser> users) {
-		this.users = users;
+	public void setUsers(List<DTOUser> users) {
+		this.users = (ArrayList<DTOUser>) users;
 	}
 
 	public int getSize() {

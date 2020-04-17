@@ -76,9 +76,12 @@ public class UserController {
 		User user = userService.getUserById(idUser);
 
 		if (CommonsUtility.isNull(user))
-			ResponseEntity.status(HttpStatus.NOT_FOUND).body(new GetUserByIdResponse(user));
+			ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(-1, "User not found.",
+					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
 
-		return ResponseEntity.status(HttpStatus.OK).body(new GetUserByIdResponse(user));
+		return ResponseEntity.status(HttpStatus.OK).body(new GetUserByIdResponse(0, "SUCCESS",
+				ServletUriComponentsBuilder.fromCurrentRequest().toUriString(),
+				user));
 	}
 
 	@GetMapping(value = "/filter/{birthDate}")
@@ -103,12 +106,11 @@ public class UserController {
 	 */
 
 	@PostMapping
-	public ResponseEntity<InsertNewUserResponse> insertNewUser(@RequestBody DTOUser dtoUser) { // XXX in input mi
-																								// aspetto un DTOUser,																				// non più uno User
+	public ResponseEntity<InsertNewUserResponse> insertNewUser(@RequestBody DTOUser dtoUser) { 
+																								
 		logger.info("---------- POST /users ----------");
 
-		if (!UserUtility.isValidForInsert(dtoUser)) { // aggiunta (per scopi di esempio) la validazione dell'input
-														// "fatta a mano"
+		if (!UserUtility.isValidForInsert(dtoUser)) { // validazione dell'input
 			logger.info("INPUT VALIDATION ERROR - dtoUser => " + dtoUser.toString());
 			throw new FailureException(Errors.INVALID_FIELD, HttpStatus.BAD_REQUEST);
 		}

@@ -10,6 +10,7 @@ import java.util.Optional;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.tecnositaf.centrobackend.enumeration.Errors;
@@ -37,7 +38,7 @@ public class DeviceServiceImpl implements DeviceService{
 	@Override
 	public void deleteDeviceById(String id) {
 		if(!deviceRepository.existsById(id)) 
-			throw new ResourceNotFoundException(Errors.RESULT_NOT_FOUND,"ResourceNotFoundException");
+			throw new ResourceNotFoundException("Device does not exist",Errors.RESULT_NOT_FOUND,HttpStatus.CONFLICT);
 	
 		deviceRepository.deleteById(id);
 	}
@@ -61,7 +62,7 @@ public class DeviceServiceImpl implements DeviceService{
 	@Override
 	public Device updateDevice(Device device) {
 		if (!deviceRepository.existsById(device.getId())) 
-			throw new ResourceNotFoundException(Errors.RESULT_NOT_FOUND,"ResourceNotFoundException");
+			throw new ResourceNotFoundException("Device does not exist",Errors.RESULT_NOT_FOUND,HttpStatus.CONFLICT);
 		
 		DeviceUtility.checkAndSetTimestampsDevice(device);
 		return deviceRepository.save(device);
@@ -70,7 +71,7 @@ public class DeviceServiceImpl implements DeviceService{
 	@Override
 	public Device updateDeviceWithId(Device device, String id) {
 		if (!deviceRepository.existsById(id)) 
-			throw new ResourceNotFoundException(Errors.RESULT_NOT_FOUND,"ResourceNotFoundException");
+			throw new ResourceNotFoundException("Device does not exist",Errors.RESULT_NOT_FOUND,HttpStatus.CONFLICT);
 		
 		DeviceUtility.checkAndSetTimestampsDevice(device);
 		return deviceRepository.save(device);

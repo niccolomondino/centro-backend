@@ -24,11 +24,13 @@ public class GetUsersResponse extends Response{
 	
 	public GetUsersResponse(int code, String message, String path) {
 		super(code, message, path);
+		this.users = null;
+		this.size = 0;
 	}
 	
 	public GetUsersResponse(int code, String message, List<User> users, int size) {
 		super(code, message, ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-		this.users = new ArrayList<DTOUser>();	//XXX il passaggio da model a DTO deve essere fatto qui, durante l'imbustamento, lasciando all'oscuro il Controller della logica di trasformazione
+		this.users = new ArrayList<DTOUser>();	//il passaggio da model a DTO deve essere fatto qui, durante l'imbustamento, lasciando all'oscuro il Controller della logica di trasformazione
 		users.forEach(user -> 
 			this.users.add( user.toDTOUser() )
 		);	
@@ -36,7 +38,7 @@ public class GetUsersResponse extends Response{
 	}
 	public GetUsersResponse(int code, String message, List<User> users) {
 		super(code, message, ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-		this.users = new ArrayList<DTOUser>();	//XXX il passaggio da model a DTO deve essere fatto qui, durante l'imbustamento, lasciando all'oscuro il Controller della logica di trasformazione
+		this.users = new ArrayList<DTOUser>();	//il passaggio da model a DTO deve essere fatto qui, durante l'imbustamento, lasciando all'oscuro il Controller della logica di trasformazione
 		users.forEach(user -> 
 			this.users.add( user.toDTOUser() )
 		);

@@ -26,7 +26,7 @@ public class LoginResponse extends Response{
 	
 	
 	public LoginResponse(User userLogged, List<User> users) {
-		super(4, "GetLoginResponse successful", ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
+		super(0, "GetLoginResponse successful", ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
 		this.userLogged = userLogged;
 		this.users = users;
 		this.numberOfUsers = users.size();

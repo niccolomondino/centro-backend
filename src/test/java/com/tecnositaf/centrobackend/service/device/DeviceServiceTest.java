@@ -32,21 +32,27 @@ public class DeviceServiceTest {
 
     @Test
     public void testGetDevicesSizeOnInit(){
-        assertSame(25, deviceService.getDevices().size());
+        assertSame(1, deviceService.getDevices().size());
     }
 
     @Test
     public void testGetDevicesValueOnInit(){
         List<Device> devicesActual = deviceService.getDevices();
 
-        assertSame(25, devicesActual.size());
-
-        Device sensor = new Device();
-        sensor.setId("322");
-        sensor.setType("Loris");
-        sensor.setDescription("Cernich");
-        sensor.setRegistrationTime( LocalDateTime.of(1991, Month.AUGUST, 13,12,12,12) );
-        assert(sensor.equals(devicesActual.get(0)));
+        assertSame(1, devicesActual.size());
+        
+        Device device = new Device();
+        device.setId("5e9726448ac3d90cd3ff6243");
+        device.setType("Telecamera");
+        device.setDescription("This is a telecamera");
+        device.setBrand("Sony");
+        //Testing dateTime considering 'manual' conversion to Zone Time
+        device.setLastUpdate(LocalDateTime.of(2019, Month.AUGUST, 1,9,30,00));
+        device.setRegistrationTime( LocalDateTime.of(2019, Month.AUGUST, 1,9,30,00) );
+        device.setIsActive(true);
+        device.setInMaintenance(false);
+        device.setWeight(30.5);
+        assert(device.equals(devicesActual.get(0)));
     }
 
     @Test

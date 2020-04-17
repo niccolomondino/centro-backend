@@ -37,12 +37,14 @@ public class GetAllDevicesEndpointTest {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(wepAppContext).build();
 	}
 
-	private final String ENDPOINT_RESOURCE_BASE_URL = "/users";
+	private final String ENDPOINT_RESOURCE_BASE_URL = "/devices";
 
 	/********** RESPONSE json **********/
-	private final String getAllUsersOnInitResponseJSON = "{" + "\"code\":0," + "\"message\":\"SUCCESS\","
+	private final String getAllDevicesOnInitResponseJSON = "{" + "\"code\":0," 
+			+ "\"message\":\"SUCCESS\","
+			+ "\"path\":\"http://localhost/devices\","
 			+ "\"devices\":["
-			+ "{\"id\":null,\"type\":\"Telecamera\",\"description\":\"This is a telecamera.\",\"brand\":\"Sony\",\"isActive\":\"true\",\"inMaintenance\":\"true\",\"lastUpdate\":\"1959-09-10 12:12:12\",\"registrationTime\":\"1959-09-10 12:12:12\",\"weight\":12.5,\"storageYears\":10}"
+			+ "{\"id\":\"5e9726448ac3d90cd3ff6243\",\"type\":\"Telecamera\",\"description\":\"This is a telecamera\",\"brand\":\"Sony\",\"isActive\":true,\"inMaintenance\":false,\"weight\":30.5,\"lastUpdate\":\"2019-08-01 09:30:00\",\"registrationTime\":\"2019-08-01 09:30:00\",\"storageYears\":1}"
 			+ "],\"size\":1" + "}";
 
 	@Test
@@ -52,28 +54,29 @@ public class GetAllDevicesEndpointTest {
 				// response
 				.andExpect(jsonPath("$.code").exists()).andExpect(jsonPath("$.code").value(0))
 				.andExpect(jsonPath("$.message").exists()).andExpect(jsonPath("$.message").value("SUCCESS"))
-				.andExpect(jsonPath("$.size").exists()).andExpect(jsonPath("$.size").value(1))
-				.andExpect(jsonPath("$.devices").exists()).andExpect(jsonPath("$.users").isArray())
+				.andExpect(jsonPath("$.devices").exists()).andExpect(jsonPath("$.devices").isArray())
 				.andExpect(jsonPath("$.devices", hasSize(1)))
-				// 'users'
-				.andExpect(jsonPath("$.users[0].idUser").exists()).andExpect(jsonPath("$.users[0].idUser").value(12))
-				.andExpect(jsonPath("$.users[0].type").exists())
-				.andExpect(jsonPath("$.users[0].type").value("Telecamera"))
-				.andExpect(jsonPath("$.users[0].description").value("This is a telecamera."))
-				.andExpect(jsonPath("$.users[0].brand").exists())
-				.andExpect(jsonPath("$.users[0].brand").value("Sony"))
-				.andExpect(jsonPath("$.users[0].isActive").exists())
-				.andExpect(jsonPath("$.users[0].isActive").value("true"))
-				.andExpect(jsonPath("$.users[0].inMaintenance").exists())
-				.andExpect(jsonPath("$.users[0].inMaintenance").value("true"))
-				.andExpect(jsonPath("$.users[0].lastUpdate").exists())
-				.andExpect(jsonPath("$.users[0].lastUpdate").value("1959-09-10 12:12:12"))
-				.andExpect(jsonPath("$.users[0].registrationTime").exists())
-				.andExpect(jsonPath("$.users[0].registrationTime").value("1959-09-10 12:12:12"))
-				.andExpect(jsonPath("$.users[0].weight").exists())
-				.andExpect(jsonPath("$.users[0].weight").value(12.5))
-				.andExpect(jsonPath("$.users[0].storageYears").exists())
-				.andExpect(jsonPath("$.users[0].storageYears").value(10))
+				.andExpect(jsonPath("$.size").exists())
+				.andExpect(jsonPath("$.size").value(1))
+				// 'devices'
+				.andExpect(jsonPath("$.devices[0].id").exists()).andExpect(jsonPath("$.devices[0].id").value("5e9726448ac3d90cd3ff6243"))
+				.andExpect(jsonPath("$.devices[0].type").exists())
+				.andExpect(jsonPath("$.devices[0].type").value("Telecamera"))
+				.andExpect(jsonPath("$.devices[0].description").value("This is a telecamera"))
+				.andExpect(jsonPath("$.devices[0].brand").exists())
+				.andExpect(jsonPath("$.devices[0].brand").value("Sony"))
+				.andExpect(jsonPath("$.devices[0].isActive").exists())
+				.andExpect(jsonPath("$.devices[0].isActive").value("true"))
+				.andExpect(jsonPath("$.devices[0].inMaintenance").exists())
+				.andExpect(jsonPath("$.devices[0].inMaintenance").value("false"))
+				.andExpect(jsonPath("$.devices[0].lastUpdate").exists())
+				.andExpect(jsonPath("$.devices[0].lastUpdate").value("2019-08-01 09:30:00"))
+				.andExpect(jsonPath("$.devices[0].registrationTime").exists())
+				.andExpect(jsonPath("$.devices[0].registrationTime").value("2019-08-01 09:30:00"))
+				.andExpect(jsonPath("$.devices[0].weight").exists())
+				.andExpect(jsonPath("$.devices[0].weight").value(30.5))
+				.andExpect(jsonPath("$.devices[0].storageYears").exists())
+				.andExpect(jsonPath("$.devices[0].storageYears").value(1))
 
 				.andDo(print());
 	}
@@ -83,7 +86,7 @@ public class GetAllDevicesEndpointTest {
 		mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_RESOURCE_BASE_URL).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk()).andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
 				// response
-				.andExpect(content().json(getAllUsersOnInitResponseJSON))
+				.andExpect(content().json(getAllDevicesOnInitResponseJSON))
 
 				.andDo(print());
 	}

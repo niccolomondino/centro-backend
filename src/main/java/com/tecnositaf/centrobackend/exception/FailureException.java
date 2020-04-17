@@ -8,41 +8,39 @@ public class FailureException extends RuntimeException{
 
 		private static final long serialVersionUID = 1L;
 		
-	    private int errCode;
-	    private String errMsg;
+	    private Errors error;
 		private HttpStatus httpStatus;
 	 
-	    public FailureException() { }
+		public FailureException() {
+			super();
+		}
+		public FailureException(String arg0, Throwable arg1, boolean arg2, boolean arg3) {
+			super(arg0, arg1, arg2, arg3);
+		}
+		public FailureException(String arg0, Throwable arg1) {
+			super(arg0, arg1);
+		}
+		public FailureException(String arg0) {
+			super(arg0);
+		}
+		public FailureException(Throwable arg0) {
+			super(arg0);
+		}
 	    
-	    public FailureException(Errors error) {
-	    	super(error.description);
-	        this.errCode = error.code;
-	        this.errMsg = error.description;
-	        this.httpStatus = HttpStatus.CONFLICT;
-	    }
 	 
 	    public FailureException(Errors error, HttpStatus httpStatus) {
-	    	super(error.description);
-	        this.errCode = error.code;
-	        this.errMsg = error.description;
+	    	super();
+	        this.error = error;
+	        this.httpStatus = httpStatus;
+	    }
+	    
+	    public FailureException(String message, Errors error, HttpStatus httpStatus) {
+	    	super(message);
+	        this.error = error;
 	        this.httpStatus = httpStatus;
 	    }
 	 
-	    public int getErrCode() {
-	        return errCode;
-	    }
-	 
-	    public void setErrCode(int errCode) {
-	        this.errCode = errCode;
-	    }
-	 
-	    public String getErrMsg() {
-	        return errMsg;
-	    }
-	 
-	    public void setErrMsg(String errMsg) {
-	        this.errMsg = errMsg;
-	    }
+	    
 	    
 	    public HttpStatus getHttpStatus() {
 			return httpStatus;
@@ -50,6 +48,19 @@ public class FailureException extends RuntimeException{
 
 		public void setHttpStatus(HttpStatus httpStatus) {
 			this.httpStatus = httpStatus;
+		}
+		
+		public Errors getResponseErrorEnum() {
+			return error;
+		}
+		public void setResponseErrorEnum(Errors error) {
+			this.error = error;
+		}
+
+		
+		@Override
+		public String toString() {
+			return "FailureException {httpStatus=" + httpStatus + ", responseErrorEnum=" + error + "}";
 		}
 
 }

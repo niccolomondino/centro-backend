@@ -133,6 +133,76 @@ public class Device {
 				+ ", inMaintenance=" + inMaintenance + ", weight=" + weight + "]";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((brand == null) ? 0 : brand.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((inMaintenance == null) ? 0 : inMaintenance.hashCode());
+		result = prime * result + ((isActive == null) ? 0 : isActive.hashCode());
+		result = prime * result + ((lastUpdate == null) ? 0 : lastUpdate.hashCode());
+		result = prime * result + ((registrationTime == null) ? 0 : registrationTime.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((weight == null) ? 0 : weight.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) return true;
+		if (obj == null) return false;
+		if (getClass() != obj.getClass()) return false;
+		Device other = (Device) obj;
+		if (brand == null) {
+			if (other.brand != null)
+				return false;
+		} else if (!brand.equals(other.brand))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (inMaintenance == null) {
+			if (other.inMaintenance != null)
+				return false;
+		} else if (!inMaintenance.equals(other.inMaintenance))
+			return false;
+		if (isActive == null) {
+			if (other.isActive != null)
+				return false;
+		} else if (!isActive.equals(other.isActive))
+			return false;
+		if (lastUpdate == null) {
+			if (other.lastUpdate != null)
+				return false;
+		} else if (!lastUpdate.equals(other.lastUpdate))
+			return false;
+		if (registrationTime == null) {
+			if (other.registrationTime != null)
+				return false;
+		} else if (!registrationTime.equals(other.registrationTime))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		if (weight == null) {
+			if (other.weight != null)
+				return false;
+		} else if (!weight.equals(other.weight))
+			return false;
+		return true;
+	}
+
 	/*
 	 * Method to transform Device model into DTODevice 
 	 */

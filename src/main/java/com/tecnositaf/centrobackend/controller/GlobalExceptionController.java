@@ -26,10 +26,10 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler {
 		
 		logger.error("Resource Not Found Exception");
 		
-		Response bodyOfResponse = new Response(ex.getErrCode().code, ex.getErrMsg(), 
-											   request.getRequestURI());
+		Response bodyOfResponse = new Response(ex.getMessage(),ex.getErrCode(), 
+								               ex.getErrDescription(), request.getRequestURI());
 		
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).headers( new HttpHeaders() )
+		return ResponseEntity.status(ex.getHttpStatus()).headers( new HttpHeaders() )
 														  .body(bodyOfResponse);
 	}
 	
@@ -41,8 +41,8 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler {
 		
 		logger.error("UNEXPECTED ERROR", ex);
 		
-		Response bodyOfResponse = new Response(-1, "This a general exception.", 
-											   request.getRequestURI());
+		Response bodyOfResponse = new Response("This a general exception.", -1, 
+										       "EXCEPTION", request.getRequestURI());
 		
 		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
 							 .headers( new HttpHeaders() ).body(bodyOfResponse);
@@ -54,7 +54,9 @@ public class GlobalExceptionController extends ResponseEntityExceptionHandler {
 	protected ResponseEntity<Object> handleFailureException(FailureException ex, HttpServletRequest request) {
 		
 		logger.error("FAILURE EXCEPTION", ex);
-		Response bodyOfResponse = new Response(ex.getErrCode(), ex.getErrMsg(), request.getRequestURI());
+		
+		Response bodyOfResponse = new Response(ex.getMessage(),ex.getResponseErrorEnum().code, 
+											   ex.getResponseErrorEnum().description, request.getRequestURI());
 		
 		return ResponseEntity.status(ex.getHttpStatus()).headers( new HttpHeaders() ).body(bodyOfResponse);
 	}

@@ -85,14 +85,14 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public int deleteUserById(Integer idUser) {
 		if(CommonsUtility.isNull(getUserById(idUser))) 
-			throw new ResourceNotFoundException(Errors.RESULT_NOT_FOUND,"ResourceNotFound");
+			throw new ResourceNotFoundException("Device does not exist",Errors.RESULT_NOT_FOUND,HttpStatus.CONFLICT);
 		return userRepository.deleteById(idUser);
 	}
 	
 	@Override
 	public User updateUser(User user) {
 		if(CommonsUtility.isNull(getUserById(user.getIdUser()))) 
-			throw new ResourceNotFoundException(Errors.RESULT_NOT_FOUND,"ResourceNotFound");
+			throw new ResourceNotFoundException("Device does not exist", Errors.RESULT_NOT_FOUND,HttpStatus.CONFLICT);
 		
 		return userRepository.update(user);
 	}
@@ -100,7 +100,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User updateUserWithId(User user, Integer idUser) {
 		if(CommonsUtility.isNull(getUserById(idUser))) 
-			throw new ResourceNotFoundException(Errors.RESULT_NOT_FOUND,"ResourceNotFound");
+			throw new ResourceNotFoundException("User does not exist", Errors.RESULT_NOT_FOUND,HttpStatus.CONFLICT);
 		
 		return userRepository.updateWithId(user);
 	}

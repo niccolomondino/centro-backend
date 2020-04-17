@@ -8,10 +8,13 @@ import com.tecnositaf.centrobackend.utilities.DateUtility;
 public class Response {
 	
 	private int code;
+	private String errDescription;
 	private String message;
 	private Timestamp timestamp;
 	private String path;
 	
+	public Response() {
+	}
 	
 	public Response(int code, String message, String path) {
 		this.code = code;
@@ -20,14 +23,26 @@ public class Response {
 		this.path = path;
 	}
 	
-	public Response() {
+	public Response(String message, int code, String errDesc, String path) {
+		this.code = code;
+		this.errDescription = errDesc;
+		this.message = message;
+		this.timestamp = new Timestamp(DateUtility.getCurrentEpochTime(ZoneOffset.UTC));
+		this.path = path;
 	}
+	
 
 	public int getCode() {
 		return code;
 	}
 	public void setCode(int code) {
 		this.code = code;
+	}
+	public String getErrDescription() {
+		return errDescription;
+	}
+	public void setErrDescription(String description) {
+		this.errDescription = description;
 	}
 	public String getMessage() {
 		return message;

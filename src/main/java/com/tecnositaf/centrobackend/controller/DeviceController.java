@@ -1,7 +1,6 @@
 package com.tecnositaf.centrobackend.controller;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -23,9 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.tecnositaf.centrobackend.dto.DTODevice;
+import com.tecnositaf.centrobackend.enumeration.Errors;
+import com.tecnositaf.centrobackend.exception.FailureException;
+import com.tecnositaf.centrobackend.exception.ResourceNotFoundException;
 import com.tecnositaf.centrobackend.model.Device;
 import com.tecnositaf.centrobackend.response.GetDeviceByIdResponse;
 import com.tecnositaf.centrobackend.response.GetDevicesResponse;
+import com.tecnositaf.centrobackend.response.InsertNewDeviceResponse;
 import com.tecnositaf.centrobackend.response.Response;
 import com.tecnositaf.centrobackend.service.DeviceService;
 import com.tecnositaf.centrobackend.utilities.CommonsUtility;
@@ -57,33 +60,38 @@ public class DeviceController {
 	/**
 	 * Read all Device objects using HTTP Get request.
 	 * 
-	 * @return
+	 * @return ResponseEntity
 	 */
 	@GetMapping
 	public ResponseEntity<Response> getDevices() {
-		return ResponseEntity.status(HttpStatus.OK).body(new GetDevicesResponse(deviceService.getDevices()));
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new GetDevicesResponse(0, "SUCCESS", 
+						ServletUriComponentsBuilder.fromCurrentRequest().toUriString(), 
+						deviceService.getDevices()));
 	}
 
 	/**
 	 * Read Device object by Id using HTTP Get request.
 	 * 
 	 * @param id
-	 * @return
+	 * @return ResponseEntity
 	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> getDevice(@PathVariable("id") String idDevice) {
 
-		if (StringUtility.isEmptyString(idDevice)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(-1, "idDevice cannot be null.",
-					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
-		}
+		if (StringUtility.isNullOrBlankString(idDevice)) 
+			throw new FailureException("Id device cannot be null",Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 
 		Device device = deviceService.getDeviceByIdNoOptional(idDevice);
 		if (CommonsUtility.isNull(device))
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Response(-1, "Device not found.",
-					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
+			throw new ResourceNotFoundException("Device not found",Errors.RESULT_NOT_FOUND,HttpStatus.NOT_FOUND);
 
-		return ResponseEntity.status(HttpStatus.OK).body(new GetDeviceByIdResponse(device));
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new GetDeviceByIdResponse(0, "SUCCESS",
+						ServletUriComponentsBuilder.fromCurrentRequest().toUriString(),
+						device));
 	}
 
 	/**
@@ -91,6 +99,7 @@ public class DeviceController {
 	 * Select objects with registration time equals or greater than timestamp.
 	 * 
 	 * @param timestamp
+	 * @return ResponseEntity
 	 */
 	@GetMapping("/filter/time")
 	public ResponseEntity<Response> filterDeviceByTime(
@@ -100,27 +109,32 @@ public class DeviceController {
 		List<Device> filteredDevicesByTime = deviceService.filterDeviceByTime(timestampDevice);
 
 		// non controllo niente perchè la lista puó essere vuota o null
-
-		return ResponseEntity.status(HttpStatus.OK).body(new GetDevicesResponse(filteredDevicesByTime));
+		
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new GetDevicesResponse(0, "SUCCESS", 
+						ServletUriComponentsBuilder.fromCurrentRequest().toUriString(), 
+						filteredDevicesByTime));
 	}
 
 	/**
 	 * 
 	 * @param storageYear
-	 * @return
+	 * @return ResponseEntity
 	 */
 	@GetMapping("/storageYears/{year}")
 	public ResponseEntity<Response> filterDevicesByStorageYear(@PathVariable("year") int storageYear) {
 
-		// input validation : bad
+		// input validation : bad request (404)
 		if (storageYear < 0)
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new Response(-1, "Storage year cannot be less than 0.",
-							ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
+			throw new FailureException("Storage year cannot be less than 0.",Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 
 		// input validation : 200 OK
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(new GetDevicesResponse(deviceService.filterDeviceByStorageYear(storageYear)));
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new GetDevicesResponse(0, "SUCCESS", 
+						ServletUriComponentsBuilder.fromCurrentRequest().toUriString(), 
+						deviceService.filterDeviceByStorageYear(storageYear)));
 	}
 
 	/*
@@ -133,7 +147,7 @@ public class DeviceController {
 	 * Create new Device using HTTP Post request.
 	 * 
 	 * @param device
-	 * @return
+	 * @return ResponseEntity
 	 */
 	@PostMapping
 	public ResponseEntity<Response> createDevice(@RequestBody DTODevice dtoDevice) {
@@ -141,9 +155,8 @@ public class DeviceController {
 		logger.info("---------- POST /devices ----------");
 		
 		if (!StringUtility.isEmptyString(dtoDevice.getId()) || CommonsUtility.isNull(dtoDevice)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new Response(-1, "Id should be null and Device cannot be null in POST request.",
-							ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
+			throw new FailureException("Id should be null and Device cannot be null in POST request",
+							Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 		}
 		
 		Device device = dtoDevice.toDevice();
@@ -151,8 +164,10 @@ public class DeviceController {
 		deviceService.createDevice(device);
 		logger.info("---------- New Device inserted ----------");
 
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(new GetDevicesResponse((ArrayList<Device>) deviceService.getDevices()));
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new InsertNewDeviceResponse(0, "SUCCESS", device,
+						deviceService.getDevices()));
 	}
 
 	/*
@@ -165,18 +180,21 @@ public class DeviceController {
 	 * Delete Device using HTTP Delete request.
 	 * 
 	 * @param id
-	 * @return
+	 * @return ResponseEntity
 	 */
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Response> deleteDevice(@PathVariable("id") String id) {
 		if (StringUtility.isEmptyString(id)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(-1, "Id cannot be null :" + id,
-					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
+			throw new FailureException("Id device cannot be null",Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 		}
 
 		deviceService.deleteDeviceById(id);
 
-		return ResponseEntity.status(HttpStatus.OK).body(new GetDevicesResponse(deviceService.getDevices()));
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new GetDevicesResponse(0, "SUCCESS", 
+						ServletUriComponentsBuilder.fromCurrentRequest().toUriString(), 
+						deviceService.getDevices()));
 	}
 
 	/*
@@ -189,7 +207,7 @@ public class DeviceController {
 	 * Update Device using HTTP Delete request.
 	 * 
 	 * @param device
-	 * @return
+	 * @return ResponseEntity
 	 */
 	@PutMapping
 	public ResponseEntity<Response> updateDevice(@RequestBody DTODevice dtoDevice) {
@@ -197,8 +215,7 @@ public class DeviceController {
 		logger.info("---------- PUT /devices ----------");
 
 		if (CommonsUtility.isNull(dtoDevice) || CommonsUtility.isNull(dtoDevice.getId())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(-1, "Device or id cannot be null :",
-					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
+			throw new FailureException("Device or id cannot be null in PUT requests", Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 		}
 		
 		
@@ -208,8 +225,11 @@ public class DeviceController {
 		
 		logger.info("---------- Device updated ----------");
 		
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(new GetDevicesResponse((ArrayList<Device>) deviceService.getDevices()));
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new GetDevicesResponse(0, "SUCCESS", 
+						ServletUriComponentsBuilder.fromCurrentRequest().toUriString(), 
+						deviceService.getDevices()));
 
 	}
 
@@ -217,23 +237,23 @@ public class DeviceController {
 	 * 
 	 * @param id
 	 * @param device
-	 * @return
+	 * @return ResponseEntity
 	 */
 	@PutMapping("/{id}")
 	public ResponseEntity<Response> updateDevice(@PathVariable("id") String id, @RequestBody DTODevice dtoDevice) {
 
-		if (CommonsUtility.isNull(dtoDevice) || !StringUtility.isEmptyString(dtoDevice.getId()) || StringUtility.isEmptyString(id)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new Response(-1, "Device or id cannot be null :" + id,
-							ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
-		}
+		if (CommonsUtility.isNull(dtoDevice) || !StringUtility.isEmptyString(dtoDevice.getId()) || StringUtility.isEmptyString(id))
+			throw new FailureException("Device or id cannot be null in PUT requests", Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 		
 		Device device = dtoDevice.toDevice();
 
 		deviceService.updateDeviceWithId(device, id);
 		
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(new GetDevicesResponse((ArrayList<Device>) deviceService.getDevices()));
+		return ResponseEntity
+				.status(HttpStatus.OK)
+				.body(new GetDevicesResponse(0, "SUCCESS", 
+						ServletUriComponentsBuilder.fromCurrentRequest().toUriString(), 
+						deviceService.getDevices()));
 
 	}
 

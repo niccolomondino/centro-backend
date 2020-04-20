@@ -19,6 +19,7 @@ import com.tecnositaf.centrobackend.exception.FailureException;
 import com.tecnositaf.centrobackend.utilities.CommonsUtility;
 import com.tecnositaf.centrobackend.utilities.StringUtility;
 
+//XXX CLASS TOFIX 
 @RestController
 public class WebSocketRestController {
 

@@ -16,6 +16,11 @@ import com.tecnositaf.centrobackend.model.Customer;
 import com.tecnositaf.centrobackend.response.Response;
 import com.tecnositaf.centrobackend.service.ConsumeWebService;
 
+/**
+ * Rest Controller for calling others web service
+ * @author niccolomondino
+ *
+ */
 @RestController
 @RequestMapping("/consume")
 public class ConsumeWebServiceController {
@@ -24,7 +29,7 @@ public class ConsumeWebServiceController {
 	ConsumeWebService consumeWebService;
 
 	/**
-	 * Test function Get area list from example web service
+	 * Test function Get alert list from example web service
 	 * 
 	 * @return
 	 */

@@ -13,6 +13,7 @@ import org.springframework.web.util.HtmlUtils;
 
 import com.tecnositaf.centrobackend.model.ResponseMessage;
 
+//XXX CLASS TOFIX 
 @Controller
 public class WebSocketController {
 	
@@ -32,16 +33,16 @@ public class WebSocketController {
 	 * @return
 	 * @throws Exception
 	 */
-	@MessageMapping("/receive/newdevice")
+	@MessageMapping("/test")
 	@SendTo("/topic/messages")
-	public ResponseMessage createNewDevice(String message) throws Exception {
+	public ResponseMessage testServer(String message) throws Exception {
 		// creating new Device
 		return new ResponseMessage("This is a message from endpoint \"/devices\"",
 				"The message" + HtmlUtils.htmlEscape(message) + "was received!");
 	}
 
 	
-	@MessageMapping("/devices/message")
+	@MessageMapping("/message")
 	public void onReceivedMessage(String message) throws Exception {
 		this.template.convertAndSend("/topic/messages", new SimpleDateFormat("HH:mm:ss").format(new Date()) + "-" + message);
 	}

@@ -79,11 +79,13 @@ public class DeviceController {
 	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<Response> getDevice(@PathVariable("id") String idDevice) {
-
+		
+		//input validation: path variable "id" cannot be null
 		if (StringUtility.isNullOrBlankString(idDevice)) 
 			throw new FailureException("Id device cannot be null",Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 
 		Device device = deviceService.getDeviceByIdNoOptional(idDevice);
+
 		if (CommonsUtility.isNull(device))
 			throw new ResourceNotFoundException("Device not found",Errors.RESULT_NOT_FOUND,HttpStatus.NOT_FOUND);
 
@@ -107,8 +109,6 @@ public class DeviceController {
 
 
 		List<Device> filteredDevicesByTime = deviceService.filterDeviceByTime(timestampDevice);
-
-		// non controllo niente perchè la lista puó essere vuota o null
 		
 		return ResponseEntity
 				.status(HttpStatus.OK)
@@ -125,11 +125,10 @@ public class DeviceController {
 	@GetMapping("/storageYears/{year}")
 	public ResponseEntity<Response> filterDevicesByStorageYear(@PathVariable("year") int storageYear) {
 
-		// input validation : bad request (404)
+		// input validation : path variable "year" cannot be less than 0
 		if (storageYear < 0)
 			throw new FailureException("Storage year cannot be less than 0.",Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 
-		// input validation : 200 OK
 		return ResponseEntity
 				.status(HttpStatus.OK)
 				.body(new GetDevicesResponse(0, "SUCCESS", 

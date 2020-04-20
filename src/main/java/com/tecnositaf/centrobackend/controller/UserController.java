@@ -6,6 +6,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.tecnositaf.centrobackend.dto.DTOUser;
 import com.tecnositaf.centrobackend.enumeration.Errors;
 import com.tecnositaf.centrobackend.exception.FailureException;
+import com.tecnositaf.centrobackend.exception.ResourceNotFoundException;
 import com.tecnositaf.centrobackend.model.User;
 import com.tecnositaf.centrobackend.response.GetUserByIdResponse;
 import com.tecnositaf.centrobackend.response.GetUsersResponse;
@@ -69,15 +70,13 @@ public class UserController {
 	public ResponseEntity<Response> getUserById(@PathVariable("id") Integer idUser) {
 
 		if (CommonsUtility.isNull(idUser)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(-1, "Id User cannot be null.",
-					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
+			throw new FailureException("Id User cannot be null.",Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 		}
 
 		User user = userService.getUserById(idUser);
 
 		if (CommonsUtility.isNull(user))
-			ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Response(-1, "User not found.",
-					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
+			throw new ResourceNotFoundException("User not found",Errors.RESULT_NOT_FOUND,HttpStatus.NOT_FOUND);
 
 		return ResponseEntity.status(HttpStatus.OK).body(new GetUserByIdResponse(0, "SUCCESS",
 				ServletUriComponentsBuilder.fromCurrentRequest().toUriString(),
@@ -88,14 +87,11 @@ public class UserController {
 	public ResponseEntity<Response> filterUsersByBirtDate(
 			@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthDate) {
 
-		if (CommonsUtility.isNull(birthDate)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(-1, "Birth date cannot be null.",
-					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
-		}
+		if (CommonsUtility.isNull(birthDate)) 
+			throw new FailureException("Birth date cannot be null.",Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 
 		List<User> filteredUsersByBirthDate = userService.filterUsersByBirthDate(birthDate);
 		
-		// non controllo niente perchè la lista puó essere vuota o null
 		return ResponseEntity.status(HttpStatus.OK).body(new GetUsersResponse(0, "SUCCESS", filteredUsersByBirthDate));
 	}
 
@@ -110,11 +106,12 @@ public class UserController {
 																								
 		logger.info("---------- POST /users ----------");
 
-		if (!UserUtility.isValidForInsert(dtoUser)) { // validazione dell'input
+		if (!UserUtility.isValidForInsert(dtoUser)) {
 			logger.info("INPUT VALIDATION ERROR - dtoUser => " + dtoUser.toString());
-			throw new FailureException(Errors.INVALID_FIELD, HttpStatus.BAD_REQUEST);
+			throw new FailureException("Id should be null and User cannot be null in POST request",
+					Errors.INVALID_FIELD, HttpStatus.BAD_REQUEST);
 		}
-
+		
 		User user = dtoUser.toUser();
 
 		int numRowsInserted = userService.insertNewUserWithRowsInsertedCheck(user);
@@ -137,8 +134,8 @@ public class UserController {
 		logger.info("Delete User with ID = " + idUser + "...");
 
 		if (CommonsUtility.isNull(idUser)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Response(-1, "Id cannot be null",
-					ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
+			throw new FailureException("idUser cannot be null",
+					Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 		}
 
 		userService.deleteUserById(idUser);
@@ -164,13 +161,14 @@ public class UserController {
 	 */
 
 	@PutMapping
-	public ResponseEntity<Response> updateUser(@RequestBody User user) {
+	public ResponseEntity<Response> updateUser(@RequestBody DTOUser dtoUser) {
 
-		if (CommonsUtility.isNull(user) || CommonsUtility.isNull(user.getIdUser())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new Response(-1, "User or idUser cannot be null or empty",
-							ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
+		if (CommonsUtility.isNull(dtoUser) || CommonsUtility.isNull(dtoUser.getIdUser())) {
+			throw new FailureException("User or idUser cannot be null or empty",
+					Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 		}
+		
+		User user = dtoUser.toUser();
 
 		userService.updateUser(user);
 
@@ -179,13 +177,14 @@ public class UserController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<Response> updateUser(@PathVariable("id") Integer idUser, @RequestBody User user) {
+	public ResponseEntity<Response> updateUser(@PathVariable("id") Integer idUser, @RequestBody DTOUser dtoUser) {
 
-		if (CommonsUtility.isNull(user) || !CommonsUtility.isNull(user.getIdUser()) || CommonsUtility.isNull(idUser)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(new Response(-1, "User or idUser cannot be null or empty",
-							ServletUriComponentsBuilder.fromCurrentRequest().toUriString()));
+		if (CommonsUtility.isNull(dtoUser) || !CommonsUtility.isNull(dtoUser.getIdUser()) || CommonsUtility.isNull(idUser)) {
+			throw new FailureException("User or idUser cannot be null or empty", 
+					Errors.INVALID_FIELD,HttpStatus.BAD_REQUEST);
 		}
+
+		User user = dtoUser.toUser();
 
 		userService.updateUserWithId(user, idUser);
 

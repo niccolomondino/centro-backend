@@ -1,17 +1,31 @@
 package com.tecnositaf.centrobackend.exception;
 
+import org.springframework.http.HttpStatus;
+
+import com.tecnositaf.centrobackend.enumeration.Errors;
+
 public class ResourceNotFoundException extends RuntimeException{
 
 	private static final long serialVersionUID = 1L;
 	
     private  int errCode;
-    private  String errMsg;
+    private  String errDescription;
+    private  HttpStatus httpStatus;
  
     public ResourceNotFoundException() { }
  
-    public ResourceNotFoundException(int errCode, String errMsg) {
-        this.errCode = errCode;
-        this.errMsg = errMsg;
+    public ResourceNotFoundException(Errors error) {
+    	super();
+        this.errCode = error.code;
+        this.errDescription = error.description;
+        this.httpStatus = HttpStatus.NOT_FOUND;
+    }
+    
+    public ResourceNotFoundException(String message, Errors error, HttpStatus httpStatus) {
+    	super(message);
+        this.errCode = error.code;
+        this.errDescription = error.description;
+        this.httpStatus = httpStatus;
     }
  
     public int getErrCode() {
@@ -22,11 +36,19 @@ public class ResourceNotFoundException extends RuntimeException{
         this.errCode = errCode;
     }
  
-    public String getErrMsg() {
-        return errMsg;
+    public String getErrDescription() {
+        return errDescription;
     }
  
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
+    public void setErrDescription(String errMsg) {
+        this.errDescription = errMsg;
     }   
+    
+    public HttpStatus getHttpStatus() {
+		return httpStatus;
+	}
+
+	public void setHttpStatus(HttpStatus httpStatus) {
+		this.httpStatus = httpStatus;
+	}
 }

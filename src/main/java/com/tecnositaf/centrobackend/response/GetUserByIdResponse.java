@@ -1,28 +1,29 @@
 package com.tecnositaf.centrobackend.response;
 
 
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.tecnositaf.centrobackend.dto.DTOUser;
 import com.tecnositaf.centrobackend.model.User;
 
 public class GetUserByIdResponse extends Response{
 
-private User user;
+	private DTOUser user;
 	
 	public GetUserByIdResponse(int code, String message, String path) {
 		super(code, message, path);
+		this.user = null;
 	}
 
-	public GetUserByIdResponse(User user) {
-		super(2,"Get User by ID Response Successful", ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-		this.user = user;
+	public GetUserByIdResponse(int code, String message, String path, User user) {
+		super(code, message, path);
+		this.user = user.toDTOUser();
 	}
 
-	public User getUser() {
+	public DTOUser getUser() {
 		return user;
 	}
 
-	public void setUser(User user) {
+	public void setUser(DTOUser user) {
 		this.user = user;
 	}
 }

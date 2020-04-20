@@ -10,13 +10,16 @@ import java.util.Optional;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.tecnositaf.centrobackend.enumeration.Errors;
 //import com.tecnositaf.centrobackend.enumeration.Errors;
 import com.tecnositaf.centrobackend.exception.ResourceNotFoundException;
 import com.tecnositaf.centrobackend.model.Device;
 import com.tecnositaf.centrobackend.repository.DeviceRepository;
 import com.tecnositaf.centrobackend.utilities.DateUtility;
+import com.tecnositaf.centrobackend.utilities.DeviceUtility;
 
 @Service
 public class DeviceServiceImpl implements DeviceService{
@@ -28,60 +31,60 @@ public class DeviceServiceImpl implements DeviceService{
 	
 	
     @Override
-    public List<Device> findAll() {
+    public List<Device> getDevices() {
         return deviceRepository.findAll();
     }
 
 	@Override
-	public void deleteById(String id) {
+	public void deleteDeviceById(String id) {
 		if(!deviceRepository.existsById(id)) 
-			throw new ResourceNotFoundException(60,"ResourceNotFoundException");
+			throw new ResourceNotFoundException("Device does not exist",Errors.RESULT_NOT_FOUND,HttpStatus.CONFLICT);
 	
 		deviceRepository.deleteById(id);
 	}
 
 	@Override
-	public Optional<Device> findById(String id) {
+	public Optional<Device> getDeviceById(String id) {
 		return deviceRepository.findById(id);
 	}
 
 	//method findById without using Optional<Device> 
-	public Device findByIdNoOptional(String idDevice) {
-		return findById(idDevice).isPresent() ? deviceRepository.findById(idDevice).get() : null;
+	public Device getDeviceByIdNoOptional(String idDevice) {
+		return getDeviceById(idDevice).isPresent() ? deviceRepository.findById(idDevice).get() : null;
 	}
 
 	@Override
-	public Device save(Device device) {
-		checkAndSetTimestampsDevice(device);
+	public Device createDevice(Device device) {
+		DeviceUtility.checkAndSetTimestampsDevice(device);
 		return deviceRepository.save(device);
 	}
 	
 	@Override
-	public Device update(Device device) {
+	public Device updateDevice(Device device) {
 		if (!deviceRepository.existsById(device.getId())) 
-			throw new ResourceNotFoundException(60,"ResourceNotFoundException");
+			throw new ResourceNotFoundException("Device does not exist",Errors.RESULT_NOT_FOUND,HttpStatus.CONFLICT);
 		
-		checkAndSetTimestampsDevice(device);
+		DeviceUtility.checkAndSetTimestampsDevice(device);
 		return deviceRepository.save(device);
 	}
 	
 	@Override
-	public Device updateWithId(Device device, String id) {
+	public Device updateDeviceWithId(Device device, String id) {
 		if (!deviceRepository.existsById(id)) 
-			throw new ResourceNotFoundException(60,"ResourceNotFoundException");
+			throw new ResourceNotFoundException("Device does not exist",Errors.RESULT_NOT_FOUND,HttpStatus.CONFLICT);
 		
-		checkAndSetTimestampsDevice(device);
+		DeviceUtility.checkAndSetTimestampsDevice(device);
 		return deviceRepository.save(device);
 	}
 	
 	@Override
-	public boolean existsById(String id) {
+	public boolean existsDeviceById(String id) {
 		return deviceRepository.existsById(id);
 	}
 
 	public ArrayList<Device> filterDeviceByTime(LocalDateTime dateTime) {
 		ArrayList<Device> filteredListDevice = new ArrayList<>();
-		ArrayList<Device> listDevices = (ArrayList<Device>) findAll();
+		ArrayList<Device> listDevices = (ArrayList<Device>) getDevices();
 
 		//usare lamda e non for each classico
 		listDevices.forEach(device ->{if (device.getRegistrationTime() != null) {
@@ -108,19 +111,5 @@ public class DeviceServiceImpl implements DeviceService{
 
 		return filteredListDevice;
 	}
-
-	
-	@Override
-	public void checkAndSetTimestampsDevice(Device device) {
-
-		if (device.getLastUpdate() == null)
-			device.setLastUpdate(LocalDateTime.now());
-
-		if (device.getRegistrationTime() == null)
-			device.setRegistrationTime(LocalDateTime.now());
-	}
-
-	
-
 
 }

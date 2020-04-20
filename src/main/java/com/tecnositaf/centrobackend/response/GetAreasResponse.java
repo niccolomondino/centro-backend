@@ -25,7 +25,7 @@ public class GetAreasResponse extends Response{
 	
 	
 	public GetAreasResponse() {
-		super(2,"Get Areas Response Successful", ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
+		super(0,"Get Areas Response Successful", ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
 	}
 
 	

@@ -4,26 +4,13 @@ package com.tecnositaf.centrobackend.utilities;
 import java.io.IOException;
 import java.util.List;
 
-//import java.util.Collection;
-//import java.util.List;
-
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-//import com.fasterxml.jackson.core.type.TypeReference;
-//import com.fasterxml.jackson.databind.DeserializationFeature;
-//import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-//import com.fasterxml.jackson.databind.type.CollectionType;
-import com.tecnositaf.centrobackend.enumeration.Errors;
-import com.tecnositaf.centrobackend.exception.FailureException;
 
 
 /**
- * Commons class is a set of static functions which can be useful 
+ * CommonsUtility class is a set of static functions which can be useful 
  * for the whole project.
  * @author niccolo mondino
  *
@@ -48,12 +35,6 @@ public class CommonsUtility {
 		} catch (IOException e) {
 			throw new RuntimeException("[ERROR] FAILURE DURING PARSING JSON STRING - json => " + json);
 		}
-		/*
-		 * Alternative catch
-		 * catch (JsonProcessingException e) {
-			throw new FailureException(Errors.PARSING_JACKSON_EXCEPTION,HttpStatus.UNSUPPORTED_MEDIA_TYPE);
-		   }
-		 */
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -66,13 +47,6 @@ public class CommonsUtility {
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException("[ERROR] FAILURE DURING PARSING JSON STRING - json => " + json);
 		}
-		/*
-		 * Alternative catch
-		 * catch (JsonProcessingException e) {
-				throw new FailureException(Errors.PARSING_JACKSON_EXCEPTION,HttpStatus.UNSUPPORTED_MEDIA_TYPE);
-		   }
-		 */
-		
 	}
 	
 	

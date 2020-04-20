@@ -1,8 +1,11 @@
 package com.tecnositaf.centrobackend.utilities;
 
+import java.time.LocalDateTime;
+
 import org.springframework.util.StringUtils;
 
 import com.tecnositaf.centrobackend.dto.DTODevice;
+import com.tecnositaf.centrobackend.model.Device;
 
 public class DeviceUtility {
 	
@@ -15,4 +18,13 @@ public class DeviceUtility {
         if( StringUtils.isEmpty(dtoDevice.getBrand()) )	return false;
         return true;
     }
+	
+	public static void checkAndSetTimestampsDevice(Device device) {
+
+		if (device.getLastUpdate() == null)
+			device.setLastUpdate(LocalDateTime.now());
+
+		if (device.getRegistrationTime() == null)
+			device.setRegistrationTime(LocalDateTime.now());
+	}
 }

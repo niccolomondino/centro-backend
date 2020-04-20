@@ -13,7 +13,7 @@ public class GetImageResponse extends Response{
 	}
 	
 	public GetImageResponse(byte[] file, String filename, long size) {
-		super(3, "GetImageResponse successful", ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
+		super(0, "GetImageResponse successful", ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
 		this.file = file;
 		this.filename = filename;
 		this.size = size;

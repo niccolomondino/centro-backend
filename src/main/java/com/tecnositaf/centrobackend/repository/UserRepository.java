@@ -50,6 +50,14 @@ public class UserRepository {
 	public int deleteById(Integer idUser) {
 		return userMapper.deleteById(idUser);
 	}
+	
+	public User update(User user) {
+    	return userMapper.update(user);
+    }
+	
+	public User updateWithId(User user) {
+    	return userMapper.update(user);
+    }
 
 
 	

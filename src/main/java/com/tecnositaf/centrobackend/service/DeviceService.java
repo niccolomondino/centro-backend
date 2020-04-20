@@ -9,31 +9,25 @@ import com.tecnositaf.centrobackend.model.Device;
 
 public interface DeviceService {
 
-    List<Device> findAll();
+    List<Device> getDevices();
     
-    void deleteById(String id);
+    void deleteDeviceById(String id);
     
-    Optional<Device> findById(String id);
+    Optional<Device> getDeviceById(String id);
     
-    Device findByIdNoOptional(String id);
+    Device getDeviceByIdNoOptional(String id);
     
-    Device save(Device device);
+    Device createDevice(Device device);
     
-    
+    //potrei unificarle?
+    Device updateDevice(Device device);
+	Device updateDeviceWithId(Device device, String id);
     
     ArrayList<Device> filterDeviceByTime(LocalDateTime dateTime);
     
     ArrayList<Device> filterDeviceByStorageYear(int nYear);
 
-	boolean existsById(String id);
+	boolean existsDeviceById(String id);
 
-	void checkAndSetTimestampsDevice(Device device);
-
-	//potrei unificarle
-	Device update(Device device);
-	Device updateWithId(Device device, String id);
-
-	
-    
    
 }

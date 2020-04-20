@@ -1,42 +1,49 @@
 package com.tecnositaf.centrobackend.response;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
+import com.tecnositaf.centrobackend.dto.DTODevice;
 import com.tecnositaf.centrobackend.model.Device;
 
 public class GetDevicesResponse extends Response{
 
 	
-	private List<Device> devices;
-	private int numberOfDevices;
+	private List<DTODevice> devices;
+	private int size;
 	
-	public GetDevicesResponse(int code, String message, String path,List<Device> devices) {
-		super(code, message,path);
-		this.devices = devices;
+	public GetDevicesResponse(int code, String message, String path) {
+		super(code, message, path);
+		this.devices = null;
+		this.size = 0;
 	}
 	
-	public GetDevicesResponse(List<Device> devices) {
-		super(1,"Get Devices Response Successful",ServletUriComponentsBuilder.fromCurrentRequest().toUriString());
-		this.devices = devices;
-		//giusto settarlo qua?
-		this.numberOfDevices = devices.size();
+	public GetDevicesResponse(int code, String message, String path, List<Device> devices) {
+		super(code, message, path);
+		this.devices = new ArrayList<>();
+		devices.forEach(device -> 
+			this.devices.add( device.toDTODevice() )
+		);
+		this.size = devices.size();
 	}
 	
-	public List<Device> getDevices() {
+	
+	public List<DTODevice> getDevices() {
 		return devices;
 	}
-	public void setDevices(List<Device> devices) {
-		this.devices = devices;
+	public void setDevices(List<DTODevice> dtoDevices) {
+		this.devices = dtoDevices;
 	}
 	public int getNumberOfDevices() {
-		return numberOfDevices;
+		return size;
 	}
-	public void setNumberOfDevices(int numberOfDevices) {
-		this.numberOfDevices = numberOfDevices;
+	public void setNumberOfDevices(int size) {
+		this.size = size;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return "GetDevicesResponse {devices=" + devices + ", size=" + size + "}";
+	}
 	
 }

@@ -4,10 +4,12 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.springframework.http.HttpStatus;
 
@@ -51,5 +53,14 @@ public class DateUtility {
         if( today == null )         throw new FailureException(Errors.UNEXPECTED_ERROR,HttpStatus.INTERNAL_SERVER_ERROR);
         Period period = Period.between(birthday, today);
         return period.getYears();
+    }
+    
+    public static LocalDateTime convertDateToLocalDateTime(Date date) {
+        return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
+    }
+ 
+
+    public static Date convertLocalDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 }

@@ -3,6 +3,8 @@ package com.tecnositaf.centrobackend.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,10 @@ import com.tecnositaf.centrobackend.service.DeviceService;
 import com.tecnositaf.centrobackend.utilities.CommonsUtility;
 import com.tecnositaf.centrobackend.utilities.StringUtility;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 /**
  * DeviceController is a REST Controller that implements CRUD functionalities
  * for the domain Device
@@ -63,6 +69,14 @@ public class DeviceController {
 	 * @return ResponseEntity
 	 */
 	@GetMapping
+	@ApiOperation(value = "Get all devices", notes = "Return the list of all devices")
+	@ApiResponses({ 
+		@ApiResponse(code = HttpServletResponse.SC_OK, message = "OK"),
+		@ApiResponse(code = HttpServletResponse.SC_INTERNAL_SERVER_ERROR, message = "INTERNAL ERROR SERVER"),
+		@ApiResponse(code = HttpServletResponse.SC_UNAUTHORIZED, message = "UNAUTHORIZED"),
+		@ApiResponse(code = HttpServletResponse.SC_FORBIDDEN, message = "FORBIDDEN"),
+		@ApiResponse(code = HttpServletResponse.SC_NOT_FOUND, message = "ELEMENT NOT FOUND") 
+	})
 	public ResponseEntity<Response> getDevices() {
 		return ResponseEntity
 				.status(HttpStatus.OK)

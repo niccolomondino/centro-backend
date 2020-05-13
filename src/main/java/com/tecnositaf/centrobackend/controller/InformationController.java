@@ -43,7 +43,6 @@ public class InformationController {
 		for (int i = 0; i <= 10; i++) {
 			Random r = new Random();
 			Integer in = (r.nextInt() * (10000) + 1);
-			//Integer in = (int) (Math.random() * (10000) + 1);
 			list.add(in);
 		}
 	    return list; 

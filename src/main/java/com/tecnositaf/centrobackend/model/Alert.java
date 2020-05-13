@@ -4,7 +4,7 @@ package com.tecnositaf.centrobackend.model;
 
 import java.time.LocalDateTime;
 
- 
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.annotation.Id;
@@ -19,8 +19,8 @@ import com.tecnositaf.centrobackend.utilities.DateUtility;
 public class Alert {
 
  
-
     @Id
+    @NotNull(message = "idAlert cannot be null")
     private String idAlert;
     private String idDeviceFk;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -92,7 +92,7 @@ public class Alert {
 
     @Override
     public String toString() {
-        return "DTOAlert{" + "idAlert=" + idAlert + ", idDeviceFk='" + idDeviceFk + '\'' + ", description='"
+        return "Alert{" + "idAlert=" + idAlert + ", idDeviceFk='" + idDeviceFk + '\'' + ", description='"
                 + description + '\'' + ", code=" + code + ", timestamp='" + timestamp + '}';
     }
 

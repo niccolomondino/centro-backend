@@ -4,7 +4,9 @@ import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
+import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -15,6 +17,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
+@Import(BeanValidatorPluginsConfiguration.class)
 public class SpringFoxConfig {
     @Bean
     public Docket apiDocket() {
@@ -28,10 +31,10 @@ public class SpringFoxConfig {
     
     private ApiInfo getApiInfo() {
         return new ApiInfo(
-                "Device",
-                "Apis for Device Service",
-                "1",
-                "TERMS OF SERVICE URL",
+                "API Device Documentation",
+                "API Documentation",
+                "1.0",
+                "Terms of service",
                 new Contact("NAME","URL","EMAIL"),
                 "LICENSE",
                 "LICENSE URL",

@@ -1,8 +1,5 @@
 package com.tecnositaf.centrobackend.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +8,12 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.HtmlUtils;
 
+
+import com.tecnositaf.centrobackend.dto.DTOAlert;
 import com.tecnositaf.centrobackend.enumeration.Errors;
 import com.tecnositaf.centrobackend.exception.FailureException;
 import com.tecnositaf.centrobackend.utilities.CommonsUtility;
-import com.tecnositaf.centrobackend.utilities.StringUtility;
 
 @RestController
 public class WebSocketRestController {
@@ -32,11 +28,11 @@ public class WebSocketRestController {
 	}
 	
 	@PostMapping("/send/alert")
-	public void onReceivedAlert(@RequestBody String alert) throws Exception {
+	public void onReceivedAlert(@RequestBody DTOAlert dtoAlert) throws Exception {
 		
 		logger.info("---------- POST /send/alert ----------");
 		
-		if (!StringUtility.isEmptyString(alert) || CommonsUtility.isNull(alert)) {
+		if (CommonsUtility.isNull(dtoAlert)) {
 			throw new FailureException(Errors.NOT_ALLOWED,HttpStatus.BAD_REQUEST);
 		}
 		
@@ -44,10 +40,7 @@ public class WebSocketRestController {
 		
 		logger.info("---------- Sending Alert to Client ----------");
 		
-		this.template.convertAndSend("/topic/alerts", 
-				new SimpleDateFormat("HH:mm:ss").format(new Date()) + 
-				"-" + ServletUriComponentsBuilder.fromCurrentRequest().toUriString() +
-				"-" + alert + HtmlUtils.htmlEscape(alert) + "!");// add html escape char at the end of the message
+		this.template.convertAndSend("/topic/messages", dtoAlert);
 	}
 	
 	

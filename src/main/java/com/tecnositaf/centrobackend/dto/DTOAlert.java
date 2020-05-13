@@ -2,6 +2,9 @@ package com.tecnositaf.centrobackend.dto;
 
 
 import java.util.Date;
+
+import javax.validation.constraints.NotNull;
+
 import org.springframework.beans.BeanUtils;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.tecnositaf.centrobackend.model.Alert;
@@ -10,8 +13,10 @@ import com.tecnositaf.centrobackend.utilities.DateUtility;
  
 
 public class DTOAlert {
-
+	
+	@NotNull(message = "idAlert cannot be null")
     private String idAlert;
+	@NotNull(message = "idDeviceFk cannot be null")
     private String idDeviceFk;
     
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -101,7 +106,7 @@ public class DTOAlert {
 
     @Override
     public String toString() {
-        return "DTOAlert{" + "idAlert=" + idAlert + ", idDeviceFk='" + idDeviceFk + '\'' + ", description='"
+        return "{" + "idAlert=" + idAlert + ", idDeviceFk='" + idDeviceFk + '\'' + ", description='"
                 + description + '\'' + ", code=" + code + ", timestamp='" + timestamp + '\'' + ", storageYears="
                 + storageYears + '}';
     }
